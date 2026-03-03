@@ -15,12 +15,12 @@ public class Blow : MonoBehaviour
     void Start()
     {
         blow = InputSystem.actions.FindAction("Blow");
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.DrawLine(transform.position, transform.forward * 100, Color.red);
         if (blow.WasPressedThisFrame())
         {
             RaycastHit hit;

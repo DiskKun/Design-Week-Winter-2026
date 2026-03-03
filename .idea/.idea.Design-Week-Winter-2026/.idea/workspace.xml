@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fa76f8f0-2c9a-4af1-8f55-43d9ae226ed1" name="Changes" comment="" />
+    <list default="true" id="fa76f8f0-2c9a-4af1-8f55-43d9ae226ed1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Design-Week-Winter-2026/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Design-Week-Winter-2026/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prototyping/Scripts/Blow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prototyping/Scripts/Blow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/StarterAssets/FirstPersonController/Scenes/Blowing Playground.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StarterAssets/FirstPersonController/Scenes/Blowing Playground.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,16 +26,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;blowing-prototype&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "blow-control",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/6000.3.9f1/Unity.app/Contents/MacOS/Unity" />
@@ -77,7 +82,7 @@
       <option name="presentableId" value="Default" />
       <updated>1772495274281</updated>
       <workItem from="1772495275485" duration="1906000" />
-      <workItem from="1772552291009" duration="3179000" />
+      <workItem from="1772552291009" duration="5319000" />
     </task>
     <servers />
   </component>
