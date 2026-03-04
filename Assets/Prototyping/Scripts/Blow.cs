@@ -7,13 +7,22 @@ using UnityEngine.InputSystem;
 public class Blow : MonoBehaviour
 {
     Rigidbody blownObjectRB;
+
+    private ParticleSystem particleSystem;
+        
     private bool blowingPlayer = false;
     public TextMeshProUGUI blowText;
     public CharacterController playerController;
+    
 
     public float blowObjectForce;
 
     public float blowPlayerSpeed;
+
+    private void Start()
+    {
+        particleSystem = GetComponent<ParticleSystem>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -23,6 +32,10 @@ public class Blow : MonoBehaviour
 
     private void BlowInput()
     {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            particleSystem.Play(); // play the blow animation particles
+        }
         if (Mouse.current.leftButton.IsPressed()) // Check to see if the left mouse button is held down
         {
             // perform a raycast to see what's on the player's reticle, only include blowable and default layers
@@ -46,6 +59,7 @@ public class Blow : MonoBehaviour
 
         if (Mouse.current.leftButton.wasReleasedThisFrame) // when they let go
         {
+            particleSystem.Stop();
             blowText.text = "Click to Blow";
             blowingPlayer = false; // stop blowing the player
             blownObjectRB = null; // stop blowing the object
@@ -54,14 +68,14 @@ public class Blow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (blownObjectRB != null)
+        if (blownObjectRB)
         {
-            blownObjectRB.AddForce(transform.forward * Time.deltaTime * blowObjectForce);
+            blownObjectRB.AddForce(Time.deltaTime * blowObjectForce * transform.forward);
         }
 
         if (blowingPlayer)
         {
-            playerController.Move(-transform.forward * Time.deltaTime * blowPlayerSpeed);
+            playerController.Move(Time.deltaTime * blowPlayerSpeed * -transform.forward);
         }
     }
 }
