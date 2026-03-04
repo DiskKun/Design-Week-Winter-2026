@@ -71,7 +71,7 @@ public class Blow : MonoBehaviour
         if (blowAction.WasReleasedThisFrame()) // when they let go
         {
             particleSystem.Stop();
-            blowText.text = "Click to Blow";
+            blowText.text = "Space to Blow";
             blowingPlayer = false; // stop blowing the player
             blownObjectRB = null; // stop blowing the object
         }
