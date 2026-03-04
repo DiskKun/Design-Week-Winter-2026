@@ -8,34 +8,63 @@ public class Blow : MonoBehaviour
 {
     InputAction blow;
     Rigidbody blownObjectRB;
+    private bool blowingPlayer = false;
     public TextMeshProUGUI blowText;
+    public CharacterController playerController;
 
-    public float blowForce;
+    public float blowObjectForce;
+
+    public float blowPlayerSpeed;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         blow = InputSystem.actions.FindAction("Blow");
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (blow.WasPressedThisFrame())
+        BlowInput();
+        
+    }
+
+    private void BlowInput()
+    {
+        if (Mouse.current.leftButton.IsPressed())
         {
             RaycastHit hit;
-            Physics.Raycast(transform.position, transform.forward, out hit, 100f, LayerMask.GetMask("Blowable"));
-            if (hit.collider != null)
+            Physics.Raycast(transform.position, transform.forward, out hit, 10f, LayerMask.GetMask("Blowable", "Default"));
+            if (hit.transform != null)
             {
-                blownObjectRB = hit.collider.GetComponent<Rigidbody>();
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable"))
+                {
+                    blowingPlayer = false;
+
+                        //if (blownObjectRB.gameObject != hit.transform.gameObject)
+                        //{
+                            Debug.Log("blowing object");
+                            blownObjectRB = hit.collider.GetComponent<Rigidbody>();
+                        //}
+                    
+                
+                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default"))
+                {
+                    blowingPlayer = true;
+                    blownObjectRB = null;
+                }
             }
+            
 
             blowText.text = "Blowing...";
+        }
+        else
+        {
+            blowingPlayer = false;
+            blownObjectRB = null;
         }
 
         if (blow.WasReleasedThisFrame())
         {
-            blownObjectRB = null;
             blowText.text = "Click to Blow";
         }
     }
@@ -44,7 +73,12 @@ public class Blow : MonoBehaviour
     {
         if (blownObjectRB != null)
         {
-            blownObjectRB.AddForce(transform.forward * Time.deltaTime * blowForce);
+            blownObjectRB.AddForce(transform.forward * Time.deltaTime * blowObjectForce);
+        }
+
+        if (blowingPlayer)
+        {
+            playerController.Move(-transform.forward * Time.deltaTime * blowPlayerSpeed);
         }
     }
 }
