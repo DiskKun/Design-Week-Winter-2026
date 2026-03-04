@@ -17,6 +17,8 @@ public class Blow : MonoBehaviour
     
 
     public float blowObjectForce;
+    public float minObjectForce;
+    public float maxObjectForce;
 
     public float blowPlayerSpeed;
 
@@ -30,10 +32,17 @@ public class Blow : MonoBehaviour
     void Update()
     {
         BlowInput();
+
+        blowPlayerSpeed = blowObjectForce / 100;
     }
 
     private void BlowInput()
     {
+        blowObjectForce = Mathf.Clamp(blowObjectForce -= Mouse.current.scroll.ReadValue().y, minObjectForce, maxObjectForce);
+        var main = particleSystem.main;
+        main.simulationSpeed = blowObjectForce / 200;
+        
+        
         if (blowAction.WasPressedThisFrame())
         {
             particleSystem.Play(); // play the blow animation particles
