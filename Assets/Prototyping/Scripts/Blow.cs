@@ -25,32 +25,30 @@ public class Blow : MonoBehaviour
     {
         if (Mouse.current.leftButton.IsPressed()) // Check to see if the left mouse button is held down
         {
+            // perform a raycast to see what's on the player's reticle, only include blowable and default layers
             Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default"));
-            if (hit.transform != null)
+            if (hit.transform != null) // if hit something...
             {
-                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable"))
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
                 {
-                    blowingPlayer = false;
-                    blownObjectRB = hit.collider.GetComponent<Rigidbody>();
-                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default"))
+                    blowingPlayer = false; // stop blowing the player
+                    blownObjectRB = hit.collider.GetComponent<Rigidbody>(); // set the rigidbody of the hit object
+                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default")) // if that thing is a solid object...
                 {
-                    blowingPlayer = true;
-                    blownObjectRB = null;
+                    blowingPlayer = true; // blow the player
+                    blownObjectRB = null; // stop blowing the object
                 }
             }
             
 
             blowText.text = "Blowing...";
         }
-        else
-        {
-            blowingPlayer = false;
-            blownObjectRB = null;
-        }
 
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        if (Mouse.current.leftButton.wasReleasedThisFrame) // when they let go
         {
             blowText.text = "Click to Blow";
+            blowingPlayer = false; // stop blowing the player
+            blownObjectRB = null; // stop blowing the object
         }
     }
 
