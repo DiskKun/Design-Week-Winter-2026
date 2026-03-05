@@ -34,7 +34,7 @@ public class BlowTest : MonoBehaviour
         if (Mouse.current.leftButton.IsPressed())
         {
             RaycastHit hit;
-            Physics.Raycast(transform.position, transform.forward, out hit, 10f, LayerMask.GetMask("Blowable", "Default", "Umbrella"));
+            Physics.Raycast(transform.position, transform.forward, out hit, 10f); //LayerMask.GetMask("Blowable", "Default", "Umbrella"));
             if (hit.transform != null)
             {
                 if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable"))
