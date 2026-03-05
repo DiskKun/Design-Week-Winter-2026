@@ -16,13 +16,16 @@ public class SoundManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (blowAction.WasPressedThisFrame())
+        if (blowAction != null)
         {
-            wind.Play();
-        }
-        if (blowAction.WasReleasedThisFrame())
-        {
-            wind.Stop();
+            if (blowAction.WasPressedThisFrame())
+            {
+                wind.Play();
+            }
+            if (blowAction.WasReleasedThisFrame())
+            {
+                wind.Stop();
+            }
         }
     }
 }

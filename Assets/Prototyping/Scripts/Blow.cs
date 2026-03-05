@@ -51,62 +51,67 @@ public class Blow : MonoBehaviour
 
     private void BlowInput()
     {
-        blowObjectForce = Mathf.Clamp(blowObjectForce -= Mouse.current.scroll.ReadValue().y, minObjectForce, maxObjectForce);
+        if (Mouse.current != null)
+        {
+            blowObjectForce = Mathf.Clamp(blowObjectForce -= Mouse.current.scroll.ReadValue().y, minObjectForce, maxObjectForce);
+        }
         var main = particleSystem.main;
         main.simulationSpeed = blowObjectForce / 200;
         
-        
-        if (blowAction.WasPressedThisFrame())
+        if (blowAction != null)
         {
-            particleSystem.Play(); // play the blow animation particles
-        }
-        if (blowAction.IsPressed()) // Check to see if the left mouse button is held down
-        {
-            // perform a raycast to see what's on the player's reticle, only include blowable and default layers
-            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand"));
-            if (hit.transform != null) // if hit something...
+            if (blowAction.WasPressedThisFrame())
             {
-                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
+                particleSystem.Play(); // play the blow animation particles
+            }
+            if (blowAction.IsPressed()) // Check to see if the left mouse button is held down
+            {
+                // perform a raycast to see what's on the player's reticle, only include blowable and default layers
+                Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand"));
+                if (hit.transform != null) // if hit something...
                 {
-                    blowingPlayer = false; // stop blowing the player
-                    blownObjectRB = hit.collider.GetComponent<Rigidbody>(); // set the rigidbody of the hit object
-                    blowingBubble = false;
-                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default")) // if that thing is a solid object...
+                    if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
+                    {
+                        blowingPlayer = false; // stop blowing the player
+                        blownObjectRB = hit.collider.GetComponent<Rigidbody>(); // set the rigidbody of the hit object
+                        blowingBubble = false;
+                    } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default")) // if that thing is a solid object...
+                    {
+                        blowingPlayer = true; // blow the player
+                        blownObjectRB = null; // stop blowing the object
+                        blowingBubble = false;
+                    } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Wand"))
+                    {
+                        blowingBubble = true;
+                        blowingPlayer = false;
+                        blownObjectRB = null;
+                    }
+                }
+
+                breath -= 0.1f * Time.deltaTime;
+                if (breath < 0)
                 {
-                    blowingPlayer = true; // blow the player
-                    blownObjectRB = null; // stop blowing the object
-                    blowingBubble = false;
-                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Wand"))
+                    breath = 0;
+                }
+                blowText.text = "Blowing...";
+            }
+            else
+            {
+                breath += 0.1f * Time.deltaTime;
+                if(breath > 1)
                 {
-                    blowingBubble = true;
-                    blowingPlayer = false;
-                    blownObjectRB = null;
+                    breath = 1;
                 }
             }
 
-            breath -= 0.1f * Time.deltaTime;
-            if (breath < 0)
+            if (blowAction.WasReleasedThisFrame()) // when they let go
             {
-                breath = 0;
+                particleSystem.Stop();
+                blowText.text = "Space to Blow";
+                blowingPlayer = false; // stop blowing the player
+                blownObjectRB = null; // stop blowing the object
+                blowingBubble = false;
             }
-            blowText.text = "Blowing...";
-        }
-        else
-        {
-            breath += 0.1f * Time.deltaTime;
-            if(breath > 1)
-            {
-                breath = 1;
-            }
-        }
-
-        if (blowAction.WasReleasedThisFrame()) // when they let go
-        {
-            particleSystem.Stop();
-            blowText.text = "Space to Blow";
-            blowingPlayer = false; // stop blowing the player
-            blownObjectRB = null; // stop blowing the object
-            blowingBubble = false;
         }
     }
 
