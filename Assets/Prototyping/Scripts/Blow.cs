@@ -22,24 +22,33 @@ public class Blow : MonoBehaviour
     public bool blowingUmbrella = false;
     public Slider lungMeter;
     public RectTransform lungSize;
+    float lungSizeFloat;
 
     private bool umbrellaEnabled = false;
 
     public float blowObjectForce;
     public float minObjectForce;
     public float maxObjectForce;
-    public float breath;
 
-    float lungSliderRange;
+    public float breath;
+    public float maxBreath = 10;
+    public float breathChangeRate;
+    //public float minBreath;
 
     public float blowPlayerSpeed;
+
+    public AudioSource wind;
 
     private void Start()
     {
         particleSystem = GetComponent<ParticleSystem>();
         blowAction = InputSystem.actions.FindAction("Blow");
 
-        
+        //maxBreath = 10;
+        lungMeter.minValue = 0;
+        lungMeter.maxValue = maxBreath;
+        lungMeter.value = maxBreath / 2;
+
     }
 
     // Update is called once per frame
@@ -49,7 +58,7 @@ public class Blow : MonoBehaviour
 
         blowPlayerSpeed = blowObjectForce / 100;
 
-        float lungSizeFloat = blowObjectForce / 1000;
+        lungSizeFloat = (blowObjectForce / 500) - 0.5f;
         lungSize.localScale = new Vector3(lungSizeFloat, lungSizeFloat, lungSizeFloat);
         lungMeter.value = breath;
 
@@ -71,6 +80,7 @@ public class Blow : MonoBehaviour
         if (blowAction.WasPressedThisFrame())
         {
             particleSystem.Play(); // play the blow animation particles
+            wind.Play();
         }
         if (blowAction.IsPressed()) // Check to see if the left mouse button is held down
         {
@@ -105,7 +115,7 @@ public class Blow : MonoBehaviour
                 }
             }
 
-            breath -= 0.1f * Time.deltaTime;
+            breath -= blowObjectForce/maxObjectForce * Time.deltaTime;
             if (breath < 0)
             {
                 breath = 0;
@@ -114,14 +124,14 @@ public class Blow : MonoBehaviour
         }
         else
         {
-            breath += 0.1f * Time.deltaTime;
-            if(breath > 1)
+            breath += 1f * Time.deltaTime;
+            if(breath > maxBreath)
             {
-                breath = 1;
+                breath = maxBreath;
             }
         }
 
-        if (blowAction.WasReleasedThisFrame()) // when they let go
+        if (blowAction.WasReleasedThisFrame() || breath <= 0) // when they let go
         {
             particleSystem.Stop();
             blowText.text = "Space to Blow";
@@ -129,6 +139,7 @@ public class Blow : MonoBehaviour
             blownObjectRB = null; // stop blowing the object
             blowingBubble = false;
             blowingUmbrella = false;
+            wind.Stop();
         }
     }
 
