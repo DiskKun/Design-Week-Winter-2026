@@ -686,6 +686,7 @@ MonoBehaviour:
   blowingForward: 0
   blowingLeft: 0
   blowingRigth: 0
+  boat: {fileID: 4931218026981512397}
   blowText: {fileID: 1555054804}
   playerController: {fileID: 5393215579111688476}
   blowObjectForce: 1000
@@ -3164,7 +3165,7 @@ GameObject:
   - component: {fileID: 4931218026981512397}
   - component: {fileID: 4931218026981512396}
   m_Layer: 2
-  m_Name: Plane
+  m_Name: Flag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3291,7 +3292,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2193423313678232965}
   serializedVersion: 5
-  m_Mass: 2
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

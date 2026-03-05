@@ -15,6 +15,8 @@ public class BlowTest : MonoBehaviour
     public bool blowingLeft = false;
     public bool blowingRigth = false;
 
+    public Rigidbody boat;
+    
     public TextMeshProUGUI blowText;
     public CharacterController playerController;
 
@@ -30,7 +32,9 @@ public class BlowTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Boat = GetComponent<Rigidbody>();
         BlowInput();
+        
 
     }
 
@@ -80,6 +84,7 @@ public class BlowTest : MonoBehaviour
             blowingPlayer = false;
             blownObjectRB = null;
             blowingUmbrella = false;
+            blowingForward = false;
         }
 
         if (blow.WasReleasedThisFrame())
@@ -109,7 +114,7 @@ public class BlowTest : MonoBehaviour
         if (blowingForward)
         {
             playerController.Move(transform.forward * Time.deltaTime);
-            
+            boat.Move(transform.forward * Time.deltaTime, Quaternion.identity);
 
 
         }
