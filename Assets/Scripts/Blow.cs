@@ -62,23 +62,33 @@ public class Blow : MonoBehaviour
         lungSize.localScale = Vector3.one * (breath / 10);
         lungMeter.value = blowObjectForce;
 
+        UmbrellaInput();
+        
+    }
+
+    void UmbrellaInput()
+    {
         if (Keyboard.current.uKey.wasPressedThisFrame)
         {
-            FirstPersonController fpc = playerController.gameObject.GetComponent<FirstPersonController>();
-
-            umbrella.SetActive(!umbrella.activeInHierarchy);
-            if (umbrella.activeInHierarchy)
-            {
-                umbrellaText.text = "Close Umbrella";
-                fpc.Gravity = -0.5f;
-            }
-            else
-            {
-                umbrellaText.text = "Open Umbrella";
-                fpc.Gravity = -7.5f;
-            }
+            SetUmbrella(!umbrella.activeInHierarchy);
         }
-        
+    }
+
+    void SetUmbrella(bool umbrellaEnabled = true)
+    {
+        FirstPersonController fpc = playerController.gameObject.GetComponent<FirstPersonController>();
+
+        umbrella.SetActive(umbrellaEnabled);
+        if (umbrella.activeInHierarchy)
+        {
+            umbrellaText.text = "Close Umbrella";
+            fpc.Gravity = -0.5f;
+        }
+        else
+        {
+            umbrellaText.text = "Open Umbrella";
+            fpc.Gravity = -7.5f;
+        }
     }
 
     private void BlowInput()
@@ -105,8 +115,9 @@ public class Blow : MonoBehaviour
                     blownObjectRB = hit.collider.GetComponent<Rigidbody>(); // set the rigidbody of the hit object
                     blowingBubble = false;
                     blowingUmbrella = false;
-                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default")) // if that thing is a solid object...
+                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default") && blownObjectRB == null) // if that thing is a solid object...
                 {
+                    SetUmbrella(false);
                     blowingPlayer = true; // blow the player
                     blownObjectRB = null; // stop blowing the object
                     blowingBubble = false;

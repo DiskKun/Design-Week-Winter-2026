@@ -480,7 +480,7 @@ MonoBehaviour:
   blowingUmbrella: 0
   lungMeter: {fileID: 482733752}
   lungSize: {fileID: 482733751}
-  blowObjectForce: 1000
+  blowObjectForce: 750
   minObjectForce: 500
   maxObjectForce: 1000
   breath: 0
