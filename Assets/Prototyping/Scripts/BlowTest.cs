@@ -8,8 +8,13 @@ public class BlowTest : MonoBehaviour
 {
     InputAction blow;
     Rigidbody blownObjectRB;
-    private bool blowingPlayer = false;
-    private bool blowingUmbrella = false;
+    public bool blowingPlayer = false;
+    public bool blowingUmbrella = false;
+
+    public bool blowingForward = false;
+    public bool blowingLeft = false;
+    public bool blowingRigth = false;
+
     public TextMeshProUGUI blowText;
     public CharacterController playerController;
 
@@ -29,7 +34,7 @@ public class BlowTest : MonoBehaviour
 
     }
 
-    private void BlowInput()
+    public void BlowInput()
     {
         if (Mouse.current.leftButton.IsPressed())
         {
@@ -55,11 +60,16 @@ public class BlowTest : MonoBehaviour
                     blowingUmbrella = true;
                     blownObjectRB = null;
                 }
-                else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default"))
+                else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Forward"))
                 {
-                    blowingPlayer = true;
+                    blowingForward = true;
                     blownObjectRB = null;
                 }
+                else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default"))
+                        {
+                            blowingPlayer = true;
+                            blownObjectRB = null;
+                        }
             }
 
 
@@ -94,6 +104,14 @@ public class BlowTest : MonoBehaviour
         if (blowingPlayer)
         {
             playerController.Move(-transform.forward * Time.deltaTime * blowPlayerSpeed);
+        }
+
+        if (blowingForward)
+        {
+            playerController.Move(transform.forward * Time.deltaTime);
+            
+
+
         }
     }
 }
