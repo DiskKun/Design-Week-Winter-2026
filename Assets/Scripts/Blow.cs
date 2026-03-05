@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using StarterAssets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -63,14 +64,18 @@ public class Blow : MonoBehaviour
 
         if (Keyboard.current.uKey.wasPressedThisFrame)
         {
+            FirstPersonController fpc = playerController.gameObject.GetComponent<FirstPersonController>();
+
             umbrella.SetActive(!umbrella.activeInHierarchy);
             if (umbrella.activeInHierarchy)
             {
                 umbrellaText.text = "Close Umbrella";
+                fpc.Gravity = -0.5f;
             }
             else
             {
                 umbrellaText.text = "Open Umbrella";
+                fpc.Gravity = -7.5f;
             }
         }
         
