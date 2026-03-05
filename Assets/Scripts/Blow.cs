@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using StarterAssets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,6 +17,7 @@ public class Blow : MonoBehaviour
     private InputAction blowAction;
     
     public TextMeshProUGUI blowText;
+    public TextMeshProUGUI umbrellaText;
     public CharacterController playerController;
 
     public bool blowingPlayer = false;
@@ -48,9 +50,8 @@ public class Blow : MonoBehaviour
         blowAction = InputSystem.actions.FindAction("Blow");
 
         //maxBreath = 10;
-        lungMeter.minValue = 0;
-        lungMeter.maxValue = maxBreath;
-        lungMeter.value = maxBreath / 2;
+        lungMeter.minValue = minObjectForce - 100;
+        lungMeter.maxValue = maxObjectForce + 100;
 
     }
 
@@ -61,16 +62,36 @@ public class Blow : MonoBehaviour
 
         blowPlayerSpeed = blowObjectForce / 100;
 
-        lungSizeFloat = (blowObjectForce / 500) - 0.5f;
-        lungSize.localScale = new Vector3(lungSizeFloat, lungSizeFloat, lungSizeFloat);
-        lungMeter.value = breath;
+        lungSize.localScale = Vector3.one * (breath / 10);
+        lungMeter.value = blowObjectForce;
 
+        UmbrellaInput();
+        
+    }
+
+    void UmbrellaInput()
+    {
         if (Keyboard.current.uKey.wasPressedThisFrame)
         {
-            umbrella.SetActive(!umbrella.activeInHierarchy);
-            
+            SetUmbrella(!umbrella.activeInHierarchy);
         }
-        
+    }
+
+    void SetUmbrella(bool umbrellaEnabled = true)
+    {
+        FirstPersonController fpc = playerController.gameObject.GetComponent<FirstPersonController>();
+
+        umbrella.SetActive(umbrellaEnabled);
+        if (umbrella.activeInHierarchy)
+        {
+            umbrellaText.text = "Close Umbrella";
+            fpc.Gravity = -0.5f;
+        }
+        else
+        {
+            umbrellaText.text = "Open Umbrella";
+            fpc.Gravity = -7.5f;
+        }
     }
 
     private void BlowInput()
@@ -89,7 +110,7 @@ public class Blow : MonoBehaviour
         {
             // perform a raycast to see what's on the player's reticle, only include blowable and default layers
             Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand", "Umbrella", "Trumpet"));
-            if (hit.transform != null) // if hit something...
+            if (hit.transform != null) // if hit something, set the state of this fuckass state machine
             {
                 if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
                 {
@@ -98,8 +119,9 @@ public class Blow : MonoBehaviour
                     blowingBubble = false;
                     blowingUmbrella = false;
                     blowingTrumpet = false;
-                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default")) // if that thing is a solid object...
+                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default") && blownObjectRB == null) // if that thing is a solid object...
                 {
+                    SetUmbrella(false);
                     blowingPlayer = true; // blow the player
                     blownObjectRB = null; // stop blowing the object
                     blowingBubble = false;
@@ -153,7 +175,7 @@ public class Blow : MonoBehaviour
         if (blowAction.WasReleasedThisFrame() || breath <= 0) // when they let go
         {
             particleSystem.Stop();
-            blowText.text = "Space to Blow";
+            blowText.text = "Blow";
             blowingPlayer = false; // stop blowing the player
             blownObjectRB = null; // stop blowing the object
             blowingBubble = false;
