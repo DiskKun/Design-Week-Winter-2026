@@ -204,6 +204,8 @@ MonoBehaviour:
   blowText: {fileID: 1555054804}
   playerController: {fileID: 5393215579111688476}
   blowObjectForce: 1000
+  minObjectForce: 500
+  maxObjectForce: 1000
   blowPlayerSpeed: 10
 --- !u!114 &655369314
 MonoBehaviour:

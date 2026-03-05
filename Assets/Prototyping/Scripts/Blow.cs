@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Blow : MonoBehaviour
 {
@@ -14,11 +15,16 @@ public class Blow : MonoBehaviour
     
     public TextMeshProUGUI blowText;
     public CharacterController playerController;
-    
+
+    public Slider lungMeter;
+    public RectTransform lungSize;
 
     public float blowObjectForce;
     public float minObjectForce;
     public float maxObjectForce;
+    public float breath;
+
+    float lungSliderRange;
 
     public float blowPlayerSpeed;
 
@@ -26,6 +32,8 @@ public class Blow : MonoBehaviour
     {
         particleSystem = GetComponent<ParticleSystem>();
         blowAction = InputSystem.actions.FindAction("Blow");
+
+        
     }
 
     // Update is called once per frame
@@ -34,6 +42,10 @@ public class Blow : MonoBehaviour
         BlowInput();
 
         blowPlayerSpeed = blowObjectForce / 100;
+
+        float lungSizeFloat = blowObjectForce / 1000;
+        lungSize.localScale = new Vector3(lungSizeFloat, lungSizeFloat, lungSizeFloat);
+        lungMeter.value = breath;
     }
 
     private void BlowInput()
@@ -63,9 +75,21 @@ public class Blow : MonoBehaviour
                     blownObjectRB = null; // stop blowing the object
                 }
             }
-            
 
+            breath -= 0.1f * Time.deltaTime;
+            if (breath < 0)
+            {
+                breath = 0;
+            }
             blowText.text = "Blowing...";
+        }
+        else
+        {
+            breath += 0.1f * Time.deltaTime;
+            if(breath > 1)
+            {
+                breath = 1;
+            }
         }
 
         if (blowAction.WasReleasedThisFrame()) // when they let go
