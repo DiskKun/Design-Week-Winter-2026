@@ -6,7 +6,7 @@ public class SoundManager : MonoBehaviour
     private InputAction blowAction;
     
     public AudioSource wind;
-
+    public AudioSource TrumpetSound;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,5 +24,10 @@ public class SoundManager : MonoBehaviour
         {
             wind.Stop();
         }
+    }
+
+    public void PlayTrumpet()
+    {
+        TrumpetSound.Play();
     }
 }
