@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class Blow : MonoBehaviour
 {
+    public SoundManager Sndmgr;
     Rigidbody blownObjectRB;
 
     public GameObject umbrella;
@@ -27,6 +28,7 @@ public class Blow : MonoBehaviour
     public bool blowingUmbrella = false;
     public bool blowingFlag = false;
 
+    public bool blowingTrumpet = false;
     public Slider lungMeter;
     public RectTransform lungSize;
     float lungSizeFloat;
@@ -45,6 +47,7 @@ public class Blow : MonoBehaviour
     public float blowPlayerSpeed;
 
     public AudioSource wind;
+    public AudioSource TrumpetSound;
 
     private void Start()
     {
@@ -112,7 +115,7 @@ public class Blow : MonoBehaviour
         if (blowAction.IsPressed()) // Check to see if the left mouse button is held down
         {
             // perform a raycast to see what's on the player's reticle, only include blowable and default layers
-            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand", "Umbrella", "Flag"));
+            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand", "Umbrella", "Flag", "Trumpet"));
             if (hit.transform != null) // if hit something, set the state of this fuckass state machine
             {
                 if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
@@ -123,6 +126,7 @@ public class Blow : MonoBehaviour
                     blowingUmbrella = false;
                     blowingFlag = false;
 
+                    blowingTrumpet = false;
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default") && blownObjectRB == null) // if that thing is a solid object...
                 {
                     SetUmbrella(false);
@@ -132,6 +136,7 @@ public class Blow : MonoBehaviour
                     blowingUmbrella = false;
                     blowingFlag = false;
 
+                    blowingTrumpet = false;
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Wand"))
                 {
                     blowingBubble = true;
@@ -140,6 +145,7 @@ public class Blow : MonoBehaviour
                     blowingUmbrella = false;
                     blowingFlag = false;
 
+                    blowingTrumpet = false;
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Umbrella"))
                 {
                     blowingBubble = false;
@@ -156,6 +162,19 @@ public class Blow : MonoBehaviour
                     blownObjectRB = null;
                     blowingUmbrella = false;
                     blowingFlag = true;
+                    blowingTrumpet = false;
+                }
+                else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Trumpet"))
+                {
+                    blowingBubble = false;
+                    blowingPlayer = false;
+                    blownObjectRB = null;
+                    blowingUmbrella = false;
+                    blowingTrumpet = true;
+                    Debug.Log("Contact with Trumpet");
+                    TrumpetSound.Play();
+                    Sndmgr.PlayTrumpet();
+
                 }
 
             }
@@ -185,9 +204,12 @@ public class Blow : MonoBehaviour
             blowingBubble = false;
             blowingUmbrella = false;
             blowingFlag = false;
+            blowingTrumpet = false;
             wind.Stop();
         }
     }
+
+   
 
     private void FixedUpdate()
     {
