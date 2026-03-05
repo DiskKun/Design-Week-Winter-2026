@@ -59,7 +59,7 @@ public class Blow : MonoBehaviour
         blowPlayerSpeed = blowObjectForce / 100;
 
         lungSizeFloat = (blowObjectForce / 500) - 0.5f;
-        lungSize.localScale = new Vector3(lungSizeFloat, lungSizeFloat, lungSizeFloat);
+        lungSize.localScale = Vector3.one * lungSizeFloat;
         lungMeter.value = breath;
 
         if (Keyboard.current.uKey.wasPressedThisFrame)
@@ -86,7 +86,7 @@ public class Blow : MonoBehaviour
         {
             // perform a raycast to see what's on the player's reticle, only include blowable and default layers
             Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand", "Umbrella"));
-            if (hit.transform != null) // if hit something...
+            if (hit.transform != null) // if hit something, set the state of this fuckass state machine
             {
                 if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
                 {
