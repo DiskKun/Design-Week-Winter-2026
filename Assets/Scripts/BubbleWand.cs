@@ -21,7 +21,7 @@ public class BubbleWand : MonoBehaviour
         {
             bubbleInterval = Mathf.Lerp(2f, 0.1f, blow.blowObjectForce / blow.maxObjectForce);
 
-            if (bubbleIntervalTimer == 0)
+            if (bubbleIntervalTimer == 0 || bubbleRB == null)
             {
                 bubbleRB = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity).GetComponent<Rigidbody>();
                 bubbleRB.gameObject.GetComponent<Bubble>().enabled = false;

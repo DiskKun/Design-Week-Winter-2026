@@ -15,6 +15,7 @@ public class Blow : MonoBehaviour
     private InputAction blowAction;
     
     public TextMeshProUGUI blowText;
+    public TextMeshProUGUI umbrellaText;
     public CharacterController playerController;
 
     public bool blowingPlayer = false;
@@ -63,7 +64,14 @@ public class Blow : MonoBehaviour
         if (Keyboard.current.uKey.wasPressedThisFrame)
         {
             umbrella.SetActive(!umbrella.activeInHierarchy);
-            
+            if (umbrella.activeInHierarchy)
+            {
+                umbrellaText.text = "Close Umbrella";
+            }
+            else
+            {
+                umbrellaText.text = "Open Umbrella";
+            }
         }
         
     }
@@ -132,7 +140,7 @@ public class Blow : MonoBehaviour
         if (blowAction.WasReleasedThisFrame() || breath <= 0) // when they let go
         {
             particleSystem.Stop();
-            blowText.text = "Space to Blow";
+            blowText.text = "Blow";
             blowingPlayer = false; // stop blowing the player
             blownObjectRB = null; // stop blowing the object
             blowingBubble = false;
