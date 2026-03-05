@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Bubble : MonoBehaviour
@@ -6,6 +7,9 @@ public class Bubble : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         //Debug.Log("Destroyed Bubble");
-        //Destroy(gameObject);
+        if (other.gameObject.layer == LayerMask.NameToLayer("Default"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

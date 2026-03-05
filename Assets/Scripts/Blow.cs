@@ -45,9 +45,8 @@ public class Blow : MonoBehaviour
         blowAction = InputSystem.actions.FindAction("Blow");
 
         //maxBreath = 10;
-        lungMeter.minValue = 0;
-        lungMeter.maxValue = maxBreath;
-        lungMeter.value = maxBreath / 2;
+        lungMeter.minValue = minObjectForce - 100;
+        lungMeter.maxValue = maxObjectForce + 100;
 
     }
 
@@ -58,9 +57,8 @@ public class Blow : MonoBehaviour
 
         blowPlayerSpeed = blowObjectForce / 100;
 
-        lungSizeFloat = (blowObjectForce / 500) - 0.5f;
-        lungSize.localScale = Vector3.one * lungSizeFloat;
-        lungMeter.value = breath;
+        lungSize.localScale = Vector3.one * (breath / 10);
+        lungMeter.value = blowObjectForce;
 
         if (Keyboard.current.uKey.wasPressedThisFrame)
         {
