@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using StarterAssets;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ public class Blow : MonoBehaviour
     Rigidbody blownObjectRB;
 
     public GameObject umbrella;
+
+    public Rigidbody boatMove;
 
     private ParticleSystem particleSystem;
     private InputAction blowAction;
@@ -22,6 +25,8 @@ public class Blow : MonoBehaviour
     public bool blowingPlayer = false;
     public bool blowingBubble = false;
     public bool blowingUmbrella = false;
+    public bool blowingFlag = false;
+
     public Slider lungMeter;
     public RectTransform lungSize;
     float lungSizeFloat;
@@ -55,6 +60,7 @@ public class Blow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         BlowInput();
 
         blowPlayerSpeed = blowObjectForce / 100;
@@ -106,7 +112,7 @@ public class Blow : MonoBehaviour
         if (blowAction.IsPressed()) // Check to see if the left mouse button is held down
         {
             // perform a raycast to see what's on the player's reticle, only include blowable and default layers
-            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand", "Umbrella"));
+            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand", "Umbrella", "Flag"));
             if (hit.transform != null) // if hit something, set the state of this fuckass state machine
             {
                 if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
@@ -115,6 +121,8 @@ public class Blow : MonoBehaviour
                     blownObjectRB = hit.collider.GetComponent<Rigidbody>(); // set the rigidbody of the hit object
                     blowingBubble = false;
                     blowingUmbrella = false;
+                    blowingFlag = false;
+
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default") && blownObjectRB == null) // if that thing is a solid object...
                 {
                     SetUmbrella(false);
@@ -122,19 +130,34 @@ public class Blow : MonoBehaviour
                     blownObjectRB = null; // stop blowing the object
                     blowingBubble = false;
                     blowingUmbrella = false;
+                    blowingFlag = false;
+
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Wand"))
                 {
                     blowingBubble = true;
                     blowingPlayer = false;
                     blownObjectRB = null;
                     blowingUmbrella = false;
+                    blowingFlag = false;
+
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Umbrella"))
                 {
                     blowingBubble = false;
                     blowingPlayer = false;
                     blownObjectRB = null;
                     blowingUmbrella = true;
+                    blowingFlag = false;
+
                 }
+                else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Flag"))
+                {
+                    blowingBubble = false;
+                    blowingPlayer = false;
+                    blownObjectRB = null;
+                    blowingUmbrella = false;
+                    blowingFlag = true;
+                }
+
             }
 
             breath -= blowObjectForce/maxObjectForce * Time.deltaTime;
@@ -161,6 +184,7 @@ public class Blow : MonoBehaviour
             blownObjectRB = null; // stop blowing the object
             blowingBubble = false;
             blowingUmbrella = false;
+            blowingFlag = false;
             wind.Stop();
         }
     }
@@ -176,11 +200,23 @@ public class Blow : MonoBehaviour
 
         {
             playerController.Move(Time.deltaTime * blowPlayerSpeed * Vector3.up * 2);
+
+           
         }
 
         if (blowingPlayer)
         {
             playerController.Move(Time.deltaTime * blowPlayerSpeed * -transform.forward);
+        }
+        
+        if (blowingFlag)
+        {
+            //moves the boat when blowing the pirate flag
+            Vector3 newPos = boatMove.position + (transform.forward * blowPlayerSpeed * Time.deltaTime);
+            boatMove.MovePosition(newPos);
+
+            boatMove.MoveRotation(Quaternion.LookRotation(transform.forward));
+
         }
     }
 }
