@@ -1831,7 +1831,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Blow
   blowText: {fileID: 1555054804}
   playerController: {fileID: 5393215579111688476}
+  blowingPlayer: 0
+  blowingBubble: 0
+  lungMeter: {fileID: 0}
+  lungSize: {fileID: 0}
   blowObjectForce: 1000
+  minObjectForce: 0
+  maxObjectForce: 0
+  breath: 0
   blowPlayerSpeed: 10
 --- !u!114 &655369314
 MonoBehaviour:
@@ -5002,6 +5009,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5420857361349278248, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: analogMovement
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: JumpHeight
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}

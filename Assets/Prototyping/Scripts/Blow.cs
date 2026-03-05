@@ -9,6 +9,8 @@ public class Blow : MonoBehaviour
 {
     Rigidbody blownObjectRB;
 
+    public GameObject umbrella;
+
     private ParticleSystem particleSystem;
     private InputAction blowAction;
     
@@ -17,8 +19,11 @@ public class Blow : MonoBehaviour
 
     public bool blowingPlayer = false;
     public bool blowingBubble = false;
+    public bool blowingUmbrella = false;
     public Slider lungMeter;
     public RectTransform lungSize;
+
+    private bool umbrellaEnabled = false;
 
     public float blowObjectForce;
     public float minObjectForce;
@@ -47,6 +52,13 @@ public class Blow : MonoBehaviour
         float lungSizeFloat = blowObjectForce / 1000;
         lungSize.localScale = new Vector3(lungSizeFloat, lungSizeFloat, lungSizeFloat);
         lungMeter.value = breath;
+
+        if (Keyboard.current.uKey.wasPressedThisFrame)
+        {
+            umbrella.SetActive(!umbrella.activeInHierarchy);
+            
+        }
+        
     }
 
     private void BlowInput()
@@ -63,7 +75,7 @@ public class Blow : MonoBehaviour
         if (blowAction.IsPressed()) // Check to see if the left mouse button is held down
         {
             // perform a raycast to see what's on the player's reticle, only include blowable and default layers
-            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand"));
+            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Blowable", "Default", "Wand", "Umbrella"));
             if (hit.transform != null) // if hit something...
             {
                 if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Blowable")) // and that thing is blowable...
@@ -71,16 +83,25 @@ public class Blow : MonoBehaviour
                     blowingPlayer = false; // stop blowing the player
                     blownObjectRB = hit.collider.GetComponent<Rigidbody>(); // set the rigidbody of the hit object
                     blowingBubble = false;
+                    blowingUmbrella = false;
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Default")) // if that thing is a solid object...
                 {
                     blowingPlayer = true; // blow the player
                     blownObjectRB = null; // stop blowing the object
                     blowingBubble = false;
+                    blowingUmbrella = false;
                 } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Wand"))
                 {
                     blowingBubble = true;
                     blowingPlayer = false;
                     blownObjectRB = null;
+                    blowingUmbrella = false;
+                } else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Umbrella"))
+                {
+                    blowingBubble = false;
+                    blowingPlayer = false;
+                    blownObjectRB = null;
+                    blowingUmbrella = true;
                 }
             }
 
@@ -107,6 +128,7 @@ public class Blow : MonoBehaviour
             blowingPlayer = false; // stop blowing the player
             blownObjectRB = null; // stop blowing the object
             blowingBubble = false;
+            blowingUmbrella = false;
         }
     }
 
@@ -115,6 +137,12 @@ public class Blow : MonoBehaviour
         if (blownObjectRB)
         {
             blownObjectRB.AddForce(Time.deltaTime * blowObjectForce * transform.forward);
+        }
+        
+        if (blowingUmbrella)
+
+        {
+            playerController.Move(Time.deltaTime * blowPlayerSpeed * Vector3.up * 2);
         }
 
         if (blowingPlayer)
